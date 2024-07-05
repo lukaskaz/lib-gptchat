@@ -19,6 +19,6 @@ include_directories(inc)
 file(GLOB SOURCES "src/*.cpp")
 
 add_library(${PROJECT_NAME} ${SOURCES})
-add_dependencies(${PROJECT_NAME} liboai)
 add_dependencies(${PROJECT_NAME} libnlohmann)
+add_dependencies(${PROJECT_NAME} liboai)
 target_link_libraries(${PROJECT_NAME} oai)

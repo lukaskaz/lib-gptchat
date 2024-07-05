@@ -2,6 +2,27 @@ cmake_minimum_required(VERSION 3.10)
 
 include(ExternalProject)
 
+set(source_dir "${CMAKE_BINARY_DIR}/libnlohmann-src")
+set(build_dir "${CMAKE_BINARY_DIR}/libnlohmann-build")
+
+EXTERNALPROJECT_ADD(
+  libnlohmann
+  GIT_REPOSITORY    https://github.com/nlohmann/json.git
+  GIT_TAG           v3.11.3
+  PATCH_COMMAND     ""
+  PREFIX            libnlohmann-workspace
+  SOURCE_DIR        ${source_dir}
+  BINARY_DIR        ${build_dir}
+  CONFIGURE_COMMAND ""
+  BUILD_COMMAND     ""
+  UPDATE_COMMAND    ""
+  INSTALL_COMMAND   ""
+  TEST_COMMAND      ""
+)
+
+include_directories(${source_dir}/include)
+link_directories(${build_dir}/build)
+
 set(source_dir "${CMAKE_BINARY_DIR}/liboai-src")
 set(build_dir "${CMAKE_BINARY_DIR}/liboai-build")
 
@@ -28,25 +49,4 @@ EXTERNALPROJECT_ADD(
 )
 
 include_directories(${source_dir}/liboai/include)
-link_directories(${build_dir}/build)
-
-set(source_dir "${CMAKE_BINARY_DIR}/libnlohmann-src")
-set(build_dir "${CMAKE_BINARY_DIR}/libnlohmann-build")
-
-EXTERNALPROJECT_ADD(
-  libnlohmann
-  GIT_REPOSITORY    https://github.com/nlohmann/json.git
-  GIT_TAG           v3.11.3
-  PATCH_COMMAND     ""
-  PREFIX            libnlohmann-workspace
-  SOURCE_DIR        ${source_dir}
-  BINARY_DIR        ${build_dir}
-  CONFIGURE_COMMAND ""
-  BUILD_COMMAND     ""
-  UPDATE_COMMAND    ""
-  INSTALL_COMMAND   ""
-  TEST_COMMAND      ""
-)
-
-include_directories(${source_dir}/include)
 link_directories(${build_dir}/build)
