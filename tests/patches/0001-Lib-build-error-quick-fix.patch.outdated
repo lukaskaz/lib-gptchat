@@ -1,0 +1,36 @@
+From 8980aba7789df627f8e9d4f70c96f7622119d43b Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?=C5=81ukasz=20Ka=C5=BAmierczak?=
+ <lucas.kazmierczak@gmail.com>
+Date: Fri, 12 Jan 2024 21:09:43 +0100
+Subject: [PATCH] Lib build error quick fix
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Signed-off-by: Łukasz Kaźmierczak <lucas.kazmierczak@gmail.com>
+---
+ liboai/include/core/netimpl.h | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/liboai/include/core/netimpl.h b/liboai/include/core/netimpl.h
+index 0e2e10b..486de39 100644
+--- a/liboai/include/core/netimpl.h
++++ b/liboai/include/core/netimpl.h
+@@ -38,6 +38,7 @@
+ 	#define LIBOAI_EXPORT __declspec(dllexport)
+ #endif
+ 
++#include <filesystem>
+ #include <fstream>
+ #include <optional>	
+ #include <mutex>
+@@ -736,4 +737,4 @@ namespace liboai {
+ 			(session.SetOption(std::forward<_Options>(opts)), ...);
+ 		}
+ 	}
+-}
+\ No newline at end of file
++}
+-- 
+2.30.2
+
