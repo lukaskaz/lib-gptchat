@@ -18,7 +18,8 @@ jobs:
       uses: actions/checkout@v4
     - name: Setting up
       run: |
-        echo "sudo apt install <packages>"
+        git config --global user.name "Lukasz Kazmierczak" 
+        git config --global user.email "lukask84@o2.pl" 
     - name: Building target app
       run: |
         mkdir build && cd build && cmake .. && make
