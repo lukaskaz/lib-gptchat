@@ -1,6 +1,5 @@
 cmake_minimum_required(VERSION 3.10)
 
-find_package(nlohmann_json 3.8.1 REQUIRED)
 include(ExternalProject)
 
 set(source_dir "${CMAKE_BINARY_DIR}/liboai-src")
