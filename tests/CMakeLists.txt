@@ -27,7 +27,7 @@ add_executable(${PROJECT_NAME} ${APP_SOURCES} ${TEST_SOURCES})
 
 add_dependencies(${PROJECT_NAME} googletest)
 add_dependencies(${PROJECT_NAME} liboai)
-target_link_libraries(${PROJECT_NAME} gtest gmock Boost::filesystem oai)
+target_link_libraries(${PROJECT_NAME} gtest gmock oai)
 
 add_test(
     NAME ${PROJECT_NAME}
