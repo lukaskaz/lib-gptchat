@@ -1,0 +1,39 @@
+From bf80ac1f05dca55d18612572fe1ee4a5136d83ee Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?=C5=81ukasz=20Ka=C5=BAmierczak?=
+ <lucas.kazmierczak@gmail.com>
+Date: Sat, 27 Jan 2024 23:08:59 +0100
+Subject: [PATCH] Lib building reduction to chat only
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Signed-off-by: Łukasz Kaźmierczak <lucas.kazmierczak@gmail.com>
+---
+ liboai/CMakeLists.txt | 10 ----------
+ 1 file changed, 10 deletions(-)
+
+diff --git a/liboai/CMakeLists.txt b/liboai/CMakeLists.txt
+index 2712076..4549644 100644
+--- a/liboai/CMakeLists.txt
++++ b/liboai/CMakeLists.txt
+@@ -6,17 +6,7 @@ find_package(nlohmann_json CONFIG REQUIRED)
+ find_package(CURL REQUIRED)
+ 
+ add_library(oai
+-components/audio.cpp
+-components/azure.cpp
+ components/chat.cpp
+-components/completions.cpp
+-components/edits.cpp
+-components/embeddings.cpp
+-components/files.cpp
+-components/fine_tunes.cpp
+-components/images.cpp
+-components/models.cpp
+-components/moderations.cpp
+ core/authorization.cpp
+ core/netimpl.cpp
+ core/response.cpp
+-- 
+2.39.2
+
