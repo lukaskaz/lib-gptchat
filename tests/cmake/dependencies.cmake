@@ -1,7 +1,8 @@
 cmake_minimum_required(VERSION 3.10)
 
+find_package(nlohmann_json 3.11.3 REQUIRED)
 include(ExternalProject)
-
+ 
 set(source_dir "${CMAKE_CURRENT_BINARY_DIR}/googletest-src")
 set(build_dir "${CMAKE_CURRENT_BINARY_DIR}/googletest-build")
 set(install_dir "${CMAKE_CURRENT_BINARY_DIR}")
