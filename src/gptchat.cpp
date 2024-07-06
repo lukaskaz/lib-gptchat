@@ -17,7 +17,45 @@ static constexpr const char* configFilePath = "../conf/init.json";
 
 using json = nlohmann::json;
 
-void GptChat::init()
+GptChat::GptChat(const std::string& question, Callback&& callback) :
+    question{question}
+{
+    init();
+    run(std::move(callback));
+}
+
+GptChat::GptChat(const std::string& question) : GptChat(question, []() {})
+{}
+
+std::string GptChat::history() const
+{
+    return conversation.GetJSON().dump();
+}
+
+std::pair<std::string, std::string> GptChat::output(
+    int timeoutSec, Callback&& callback = []() {})
+{
+    while (future.wait_for(std::chrono::seconds(timeoutSec)) !=
+           std::future_status::ready)
+    {
+        callback();
+    }
+
+    auto response = future.get();
+    conversation.Update(response);
+
+    auto fullanswer = conversation.GetLastResponse();
+    fullanswer.erase(remove(fullanswer.begin(), fullanswer.end(), '\"'),
+                     fullanswer.end());
+
+    if (auto pos = fullanswer.find_first_of(".\n\r"); pos != std::string::npos)
+    {
+        return std::make_pair(fullanswer, fullanswer.substr(0, pos));
+    }
+    return {fullanswer, {}};
+}
+
+inline void GptChat::init()
 {
     std::ifstream configFile(configFilePath);
     if (!configFile.is_open())
@@ -45,7 +83,7 @@ void GptChat::init()
     gptChatEnv = oaiEnv;
 }
 
-void GptChat::run(Callback&& callback)
+inline void GptChat::run(Callback&& callback)
 {
     if (!oai.auth.SetKeyEnv(gptChatEnv))
     {
@@ -55,30 +93,6 @@ void GptChat::run(Callback&& callback)
     conversation.AddUserData(question);
     future = oai.ChatCompletion->create_async("gpt-3.5-turbo", conversation);
     callback();
-}
-
-std::pair<std::string, std::string> GptChat::output(
-    int timeoutSec, Callback&& callback = []() {})
-{
-    while (future.wait_for(std::chrono::seconds(timeoutSec)) !=
-           std::future_status::ready)
-    {
-        callback();
-    }
-
-    auto response = future.get();
-    conversation.Update(response);
-
-    std::cout << conversation.GetJSON().dump() << std::endl;
-    auto fullanswer = conversation.GetLastResponse();
-    fullanswer.erase(remove(fullanswer.begin(), fullanswer.end(), '\"'),
-                     fullanswer.end());
-
-    if (auto pos = fullanswer.find_first_of(".\n\r"); pos != std::string::npos)
-    {
-        return std::make_pair(fullanswer, fullanswer.substr(0, pos));
-    }
-    return {fullanswer, {}};
 }
 
 } // namespace gpt

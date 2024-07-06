@@ -12,16 +12,11 @@ class GptChat
   public:
     GptChat()
     {}
-    GptChat(const std::string& question) : GptChat(question, []() {})
-    {}
-    GptChat(const std::string& question, Callback&& callback) :
-        question{question}
-    {
-        init();
-        run(std::move(callback));
-    }
+    GptChat(const std::string&);
+    GptChat(const std::string&, Callback&&);
     ~GptChat(){};
 
+    std::string history() const;
     std::pair<std::string, std::string> output(int, Callback&&);
 
   private:
