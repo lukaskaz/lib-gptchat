@@ -6,8 +6,9 @@ int main()
 {
     try
     {
+        auto gptchat = gpt::GptChatFactory::create();
         auto question{"Who was the wisest man?"};
-        auto [fullanswer, shortanswer] = gpt::GptChat().run(
+        auto [fullanswer, shortanswer] = gptchat->run(
             question,
             [&question]() {
                 std::cout << "Checking question: " << question << '\n';

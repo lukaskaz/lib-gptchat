@@ -1,5 +1,8 @@
+#pragma once
+
 #include <cstdint>
 #include <functional>
+#include <memory>
 #include <optional>
 #include <string>
 #include <utility>
@@ -21,6 +24,18 @@ class GptChat
   private:
     void init();
     std::pair<std::string, std::string> output(Callback&&, int32_t);
+};
+
+class GptChatFactory
+{
+  public:
+    GptChatFactory() = delete;
+    GptChatFactory(const GptChatFactory&) = delete;
+    GptChatFactory(GptChatFactory&&) = delete;
+    GptChatFactory& operator=(const GptChatFactory&) = delete;
+    GptChatFactory& operator=(GptChatFactory&&) = delete;
+
+    static std::shared_ptr<GptChat> create();
 };
 
 } // namespace gpt
