@@ -17,42 +17,24 @@ static constexpr const char* configFilePath = "../conf/init.json";
 
 using json = nlohmann::json;
 
-GptChat::GptChat(const std::string& question, Callback&& callback) :
-    question{question}
+GptChat::GptChat()
 {
     init();
-    run(std::move(callback));
 }
 
-GptChat::GptChat(const std::string& question) : GptChat(question, []() {})
-{}
+std::pair<std::string, std::string> GptChat::run(
+    const std::string& question, Callback&& greetcallback = []() {},
+    Callback&& waitcallback = []() {}, int32_t waittimeoutsec = 3)
+{
+    conversation.AddUserData(question);
+    future = oai.ChatCompletion->create_async("gpt-3.5-turbo", conversation);
+    greetcallback();
+    return output(std::move(waitcallback), waittimeoutsec);
+}
 
 std::string GptChat::history() const
 {
     return conversation.GetJSON().dump();
-}
-
-std::pair<std::string, std::string> GptChat::output(
-    int timeoutSec, Callback&& callback = []() {})
-{
-    while (future.wait_for(std::chrono::seconds(timeoutSec)) !=
-           std::future_status::ready)
-    {
-        callback();
-    }
-
-    auto response = future.get();
-    conversation.Update(response);
-
-    auto fullanswer = conversation.GetLastResponse();
-    fullanswer.erase(remove(fullanswer.begin(), fullanswer.end(), '\"'),
-                     fullanswer.end());
-
-    if (auto pos = fullanswer.find_first_of(".\n\r"); pos != std::string::npos)
-    {
-        return std::make_pair(fullanswer, fullanswer.substr(0, pos));
-    }
-    return {fullanswer, {}};
 }
 
 inline void GptChat::init()
@@ -80,19 +62,33 @@ inline void GptChat::init()
         throw std::runtime_error("Cannot set env for GptChat");
     }
 
-    gptChatEnv = oaiEnv;
-}
-
-inline void GptChat::run(Callback&& callback)
-{
-    if (!oai.auth.SetKeyEnv(gptChatEnv))
+    if (!oai.auth.SetKeyEnv(oaiEnv))
     {
         std::cerr << "Cannot use apikey" << std::endl;
     }
+}
 
-    conversation.AddUserData(question);
-    future = oai.ChatCompletion->create_async("gpt-3.5-turbo", conversation);
-    callback();
+inline std::pair<std::string, std::string>
+    GptChat::output(Callback&& waitcallback, int32_t waittimeoutsec)
+{
+    while (future.wait_for(std::chrono::seconds(waittimeoutsec)) !=
+           std::future_status::ready)
+    {
+        waitcallback();
+    }
+
+    auto response = future.get();
+    conversation.Update(response);
+
+    auto fullanswer = conversation.GetLastResponse();
+    fullanswer.erase(remove(fullanswer.begin(), fullanswer.end(), '\"'),
+                     fullanswer.end());
+
+    if (auto pos = fullanswer.find_first_of(".\n\r"); pos != std::string::npos)
+    {
+        return std::make_pair(fullanswer, fullanswer.substr(0, pos));
+    }
+    return {fullanswer, {}};
 }
 
 } // namespace gpt

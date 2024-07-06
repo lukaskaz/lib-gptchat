@@ -7,10 +7,12 @@ int main()
     try
     {
         auto question{"Who was the wisest man?"};
-        auto [fullanswer, shortanswer] =
-            gpt::GptChat(question, [&question]() {
+        auto [fullanswer, shortanswer] = gpt::GptChat().run(
+            question,
+            [&question]() {
                 std::cout << "Checking question: " << question << '\n';
-            }).output(2, []() { std::cout << "Wait...\n"; });
+            },
+            []() { std::cout << "Wait...\n"; }, 2);
 
         std::cout << "> Full answer:\n" << fullanswer << '\n';
         std::cout << "> Short answer:\n" << shortanswer << '\n';

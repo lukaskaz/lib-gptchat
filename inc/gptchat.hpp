@@ -1,3 +1,4 @@
+#include <cstdint>
 #include <functional>
 #include <optional>
 #include <string>
@@ -10,21 +11,16 @@ using Callback = std::function<void()>;
 class GptChat
 {
   public:
-    GptChat()
-    {}
-    GptChat(const std::string&);
-    GptChat(const std::string&, Callback&&);
+    GptChat();
     ~GptChat(){};
 
+    std::pair<std::string, std::string> run(const std::string&, Callback&&,
+                                            Callback&&, int32_t);
     std::string history() const;
-    std::pair<std::string, std::string> output(int, Callback&&);
 
   private:
-    const std::string question;
-    std::string gptChatEnv;
-
     void init();
-    void run(Callback&&);
+    std::pair<std::string, std::string> output(Callback&&, int32_t);
 };
 
 } // namespace gpt
