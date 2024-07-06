@@ -25,8 +25,8 @@ TEST_F(TestGptchat, testOaiAuthWithInvalidKeyThrows)
 {
     EXPECT_THROW(({
                      auto question{"Test question"};
-                     auto [fullanswer, shortanswer] =
-                         gpt::GptChat(question, []() {}).output(1, []() {});
+                     auto [fullanswer, shortanswer] = gpt::GptChat().run(
+                         question, []() {}, []() {}, 1);
                  }),
                  liboai::exception::OpenAIException);
 }
