@@ -91,4 +91,9 @@ inline std::pair<std::string, std::string>
     return {fullanswer, {}};
 }
 
+std::shared_ptr<GptChat> GptChatFactory::create()
+{
+    return std::make_shared<GptChat>();
+}
+
 } // namespace gpt
