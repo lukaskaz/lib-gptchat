@@ -30,3 +30,14 @@ TEST_F(TestGptchat, testOaiAuthWithInvalidKeyThrows)
                  }),
                  liboai::exception::OpenAIException);
 }
+
+TEST_F(TestGptchat, testFactoryOaiAuthWithInvalidKeyThrows)
+{
+    EXPECT_THROW(({
+                     auto question{"Test question"};
+                     auto chat = gpt::GptChatFactory::create();
+                     auto [fullanswer, shortanswer] = chat->run(
+                         question, []() {}, []() {}, 1);
+                 }),
+                 liboai::exception::OpenAIException);
+}

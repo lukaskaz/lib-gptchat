@@ -91,7 +91,7 @@ inline std::pair<std::string, std::string>
     return {fullanswer, {}};
 }
 
-std::shared_ptr<GptChat> GptChatFactory::create()
+std::shared_ptr<GptChatIf> GptChatFactory::create()
 {
     return std::make_shared<GptChat>();
 }

@@ -11,15 +11,24 @@ namespace gpt
 {
 using Callback = std::function<void()>;
 
-class GptChat
+class GptChatIf
+{
+  public:
+    virtual ~GptChatIf(){};
+    virtual std::pair<std::string, std::string>
+        run(const std::string&, Callback&&, Callback&&, int32_t) = 0;
+    virtual std::string history() const = 0;
+};
+
+class GptChat : public GptChatIf
 {
   public:
     GptChat();
     ~GptChat(){};
 
     std::pair<std::string, std::string> run(const std::string&, Callback&&,
-                                            Callback&&, int32_t);
-    std::string history() const;
+                                            Callback&&, int32_t) override;
+    std::string history() const override;
 
   private:
     void init();
@@ -35,7 +44,7 @@ class GptChatFactory
     GptChatFactory& operator=(const GptChatFactory&) = delete;
     GptChatFactory& operator=(GptChatFactory&&) = delete;
 
-    static std::shared_ptr<GptChat> create();
+    static std::shared_ptr<GptChatIf> create();
 };
 
 } // namespace gpt
